@@ -9,41 +9,46 @@ function init() {
     console.log(`
     Thank you for choosing Team Builder!
     
-    Please enter your team members' details below to generate your team page.
+    Please enter your team manager's details below to begin.
     `)   
 
-    teamManager()
-}
-
-function teamManager() {
     return inquirer
-        .prompt({
+        .prompt([{
             type: 'text',
             name: 'name',
             message: 'Manager name: '
-        })
-        // {
-        //     type: 'text', 
-        //     name: 'id', 
-        //     message: 'Manager ID number: '
-        // },
-        // {
-        //     type: 'text', 
-        //     name: 'email',
-        //     message: 'Manager email: '
-        // }, 
-        // {
-        //     type: 'text',
-        //     name: 'officeNumber',
-        //     message: "Manager's office number: "
-        // })
-        .then(data => {
-            console.log(this)
-            console.log(data)
-            // const manager = new Manager(data.name, data.id, data.email, data.officeNumber)
-            // console.log(manager);
-        // })
-})}
+        },
+        {
+            type: 'text', 
+            name: 'id', 
+            message: 'Manager ID number: '
+        },
+        {
+            type: 'text', 
+            name: 'email',
+            message: 'Manager email: '
+        }, 
+        {
+            type: 'text',
+            name: 'officeNumber',
+            message: "Manager's office number: "
+        }])
+}
+
+function promptMember(manager) {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'memberType',
+                message: 'Would you like to add an engineer, an intern, or complete your team profile?',
+                choices: ['Engineer', 'Intern', 'Complete Team']
+            }
+        ])
+}
+
+
 
 init()
+    .then(teamInfo)
 
