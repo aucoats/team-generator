@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/aucoats/team-generator/issues"
   },
-  "homepage": "https://github.com/aucoats/team-generator#readme"
+  "homepage": "https://github.com/aucoats/team-generator#readme",
+  "dependencies": {
+    "inquirer": "^8.2.0"
+  }
 }
