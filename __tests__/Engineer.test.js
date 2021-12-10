@@ -30,7 +30,7 @@ test('gets engineer email', () => {
 test('gets engineer role', () => {
     const engineer = new Engineer('Stitch', '626', 'experiment@626.com')
 
-    expect(engineer.getRole()).toEqual(expect.stringContaining(`Engineer`))
+    expect(engineer.getRole()).toBe(`Engineer`)
 })
 
 test('gets engineer github', () => {

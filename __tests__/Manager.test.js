@@ -30,6 +30,6 @@ test('gets manager email', () => {
 test('gets manager role', () => {
     const manager = new Manager('Stitch', '626', 'experiment@626.com')
 
-    expect(manager.getRole()).toEqual(expect.stringContaining(`Manager`))
+    expect(manager.getRole()).toBe(`Manager`)
 })
 
