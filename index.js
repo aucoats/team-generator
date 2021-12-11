@@ -5,11 +5,21 @@ const Manager = require('./lib/Manager.js')
 const Engineer = require('./lib/Engineer.js')
 const Intern = require('./lib/Intern.js')
 
+const mock = {
+    name: 'austin',
+    id: '101',
+    email: 'no thanks', 
+    officeNumber: 'heck'
+}
+
 function init() {
     console.log(`
+    =======================================================
     Thank you for choosing Team Builder!
     
     Please enter your team manager's details below to begin.
+    =======================================================
+
     `)   
 
     return inquirer
@@ -33,10 +43,18 @@ function init() {
             name: 'officeNumber',
             message: "Manager's office number: "
         }])
+        .then(data => {
+            const manager = new Manager(data.name, data.id, data.email, data.officeNumber)
+            return manager
+        })
 }
 
-function promptMember(manager) {
-    inquirer
+function promptMember(team) {
+    if (!team.members) {
+        team.members = []
+    }
+
+    return inquirer
         .prompt([
             {
                 type: 'list',
@@ -45,10 +63,43 @@ function promptMember(manager) {
                 choices: ['Engineer', 'Intern', 'Complete Team']
             }
         ])
+        .then(member => {
+
+            if (member.memberType === 'Engineer') {
+                genEngineer(member);
+            } else if (member.memberType === 'Intern') {
+                // genIntern(intern)
+            } else {
+                return team
+            }
+
+
+        })
 }
 
+function genEngineer(team) {
+    if (!team.members.engineers) {
+        team.members.engineers = []
+    }
 
+    return inquirer
+        .prompt(
+        
+        )
+        .then(engiData => {
+            if (engiData.confirmAnotherEngi) {
+                return genEngineer(engiData)
+            }
+        })
+
+}
+
+// // function generateIntern(team) {
+
+// // }
 
 init()
-    .then(teamInfo)
-
+    .then(manager => {
+        // console.log(promptMember(manager))
+        return promptMember(manager)
+    })
