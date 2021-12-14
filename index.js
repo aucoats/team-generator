@@ -47,6 +47,7 @@ function promptMember(team) {
     }
 
     return new Promise((resolve, reject) => {
+        resolve( 
         inquirer
         .prompt([
             {
@@ -66,6 +67,7 @@ function promptMember(team) {
                 return team
             }
         })
+        )
         
 })
 }
@@ -176,9 +178,25 @@ function genIntern(team) {
 }
 
 init()
-    .then(manager => {
-        return promptMember(manager)
-    })
+    .then(promptMember
+    )
     .then(completed => {
-        console.log('completed:', completed)
+        return new Promise((resolve, reject) => {
+        resolve(console.log('completed:', completed))
+        })
     })
+
+
+    // .then(completedTeam => {
+    //     return writeHTMLFile(completedTeam)
+    // })
+    // .then(copyStyle => {
+    //     console.log(copyStyle)
+    //     return copyStyleFile();
+    // })
+    // .then(copyResponse => {
+    //     console.log(copyResponse)
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    // })
