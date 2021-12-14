@@ -5,13 +5,6 @@ const Manager = require('./lib/Manager.js')
 const Engineer = require('./lib/Engineer.js')
 const Intern = require('./lib/Intern.js')
 
-const mock = {
-    name: 'austin',
-    id: '101',
-    email: 'no thanks', 
-    officeNumber: 'heck'
-}
-
 function init() {
     console.log(`
     =======================================================
@@ -44,8 +37,7 @@ function init() {
             message: "Manager's office number: "
         }])
         .then(data => {
-            const manager = new Manager(data.name, data.id, data.email, data.officeNumber)
-            return manager
+            return data
         })
 }
 
@@ -54,7 +46,8 @@ function promptMember(team) {
         team.members = []
     }
 
-    return inquirer
+    return new Promise((resolve, reject) => {
+        inquirer
         .prompt([
             {
                 type: 'list',
@@ -66,15 +59,15 @@ function promptMember(team) {
         .then(member => {
 
             if (member.memberType === 'Engineer') {
-                genEngineer(member);
+               genEngineer(team)
             } else if (member.memberType === 'Intern') {
-                // genIntern(intern)
+               genIntern(team)
             } else {
                 return team
             }
-
-
         })
+        
+})
 }
 
 function genEngineer(team) {
@@ -83,23 +76,109 @@ function genEngineer(team) {
     }
 
     return inquirer
-        .prompt(
-        
-        )
+        .prompt([
+            {
+                type: 'input',
+                name: 'name', 
+                message: "What is your engineer's name?"
+            },
+            {
+                type: 'input',
+                name: 'id', 
+                message: "What is your engineer's' employee ID?"
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: "What is your engineer's email?"
+            },
+            {
+                type: 'input',
+                name: 'github',
+                message: "What is your engineer's github username?"
+            },
+            {
+                type: 'confirm',
+                name: 'confirmAnotherEngi',
+                message: 'Would you like to add another engineer?',
+                validate: confirmAnotherEngiInput => {
+                    if (confirmAnotherEngiInput) {
+                        return true;
+                    } else {
+                        console.log('Please confirm that you are done adding engineers.')
+                        return false;
+                    }
+                }
+            }
+        ])
         .then(engiData => {
+            team.members.engineers.push(engiData)
+
             if (engiData.confirmAnotherEngi) {
-                return genEngineer(engiData)
+                genEngineer(team)
+            } else {
+                promptMember(team)
             }
         })
 
 }
 
-// // function generateIntern(team) {
+function genIntern(team) {
+    if (!team.members.interns) {
+        team.members.interns = []
+    }
 
-// // }
+    return inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'name', 
+                message: "What is your intern's name?"
+            },
+            {
+                type: 'input',
+                name: 'id', 
+                message: "What is your intern's' employee ID?"
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: "What is your intern's email?"
+            },
+            {
+                type: 'input',
+                name: 'school',
+                message: "What is your intern's school's name?"
+            },
+            {
+                type: 'confirm',
+                name: 'confirmAnotherIntern',
+                message: 'Would you like to add another intern?',
+                validate: confirmAnotherEngiInput => {
+                    if (confirmAnotherEngiInput) {
+                        return true;
+                    } else {
+                        console.log('Please confirm that you are done adding interns.')
+                        return false;
+                    }
+                }
+            }
+        ])
+        .then(internData => {
+            team.members.interns.push(internData)
+
+            if (internData.confirmAnotherIntern) {
+                genIntern(team)
+            } else {
+                promptMember(team)
+            }
+        })
+}
 
 init()
     .then(manager => {
-        // console.log(promptMember(manager))
         return promptMember(manager)
+    })
+    .then(completed => {
+        console.log('completed:', completed)
     })
