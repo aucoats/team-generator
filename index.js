@@ -5,6 +5,28 @@ const Manager = require('./lib/Manager.js')
 const Engineer = require('./lib/Engineer.js')
 const Intern = require('./lib/Intern.js')
 
+const mock = {
+    name: "manager",
+    id: "managerID", 
+    email: "manageremail",
+    officeNumber: "managerOffice",
+    members: { 
+        engineers: [{
+            name: "engineer1",
+            id: "engi1id", 
+            email: "engi1email",
+            github: "engigithub1"
+            }, 
+            {
+            name: "engi2",
+            id: "engi2id",
+            email: "engi2email",
+            github: "engi2github"
+             }]
+    }
+}
+
+// initial prompt and calls promptMember
 function init() {
     console.log(`
     =======================================================
@@ -41,6 +63,7 @@ function init() {
         })
 }
 
+// prompts for team member type, calls completeTeam if user input is complete
 function promptMember(team) {
     if (!team.members) {
         team.members = []
@@ -56,7 +79,8 @@ function promptMember(team) {
             }
         ])
         .then(member => {
-
+            
+            // calls next prompt or completeTeam based on user input
             if (member.memberType === 'Engineer') {
                genEngineer(team)
             } else if (member.memberType === 'Intern') {
@@ -69,7 +93,7 @@ function promptMember(team) {
         
 }
 
-
+// gens engineers with inquirer prompts
 function genEngineer(team) {
     if (!team.members.engineers) {
         team.members.engineers = []
@@ -123,6 +147,7 @@ function genEngineer(team) {
 
 }
 
+// gens interns with inquirer prompts
 function genIntern(team) {
     if (!team.members.interns) {
         team.members.interns = []
@@ -175,58 +200,52 @@ function genIntern(team) {
         })
 }
 
+// creates js objects with classes
 function completeTeam(team) {
     
-    function createManager(team) {
-        const {name, id, email, officeNumber, members} = team;
-        console.log('name:', name)
-        console.log('id:', id)
-        console.log('email:', email)
-        console.log('officeNumber:', officeNumber)
-        console.log('members:', members)
-        const managerObject = new Manager(name, id, email, officeNumber, members)
-        return managerObject
-    }
-        const {}
+    console.log('team:', team)
+    console.log('team.members:', team.members)
+    console.log('team.members.engineers:', team.members.engineers)
+    console.log('team.members.interns:', team.members.interns)
 
-    function createEngineer(team) {
-        const {name, id, email, officeNumber, github} = team.members.engineers;
-        console.log('name:', name)
-        console.log('id:', id)
-        console.log('email:', email)
-        console.log('officeNumber:', officeNumber)
-        console.log('github:', github)
-        const engineerObject = new Engineer(name, id, email, officeNumber, github)
-        return engineerObject
-    } 
+    // creates manager object
+    const manager = new Manager(team.name, team.id, team.email, team.officeNumber);
+    
+    console.log('manager:', manager)
+
+    // arrays to hold engineer and intern classes 
+    const engiArray = []
+    const internArray = []
+
+    // each iteration of engi/intern info into Engineer class and pushes into array
+    if (team.members.engineers) {
+        for (i = 0; i < team.members.engineers.length; i++) {
+            const engineer = new Engineer(team.members.engineers[i].name, team.members.engineers[i].id,
+            team.members.engineers[i].email, team.members.engineers[i].github)
+        
+            engiArray.push(engineer)
+            
+    }}
+
+    if (team.members.interns) {
+        for (i = 0; i < team.members.interns.length; i++) {
+            const intern = new Intern(team.members.interns[i].name, team.members.engineers[i].id, 
+            team.members.interns[i].email, team.members.interns[i].school)
+
+            internArray.push(intern)  
+
+    }}   
+
+    console.log('engiArray:', engiArray)
+    console.log('internArray:', internArray)    
+
+    // generateHTML(manager, engiArray, internArray).then( file writing functions)
 }
 
-init()
+function generateHTML(manager, engineers, interns) {
+    return `
+     `
+}
 
 // init()
-//     .then((firstPrompt) => {
-//         console.log('firstPrompt:', firstPrompt)
-//         promptMember(firstPrompt)
-        
-    // })
-    // .then((completed) => {
-    //     console.log('completed:', completed)
-    //     return new Promise((resolve, reject) => {
-    //     resolve(console.log('completed:', completed))
-    //     })
-    // })
-
-
-    // .then(completedTeam => {
-    //     return writeHTMLFile(completedTeam)
-    // })
-    // .then(copyStyle => {
-    //     console.log(copyStyle)
-    //     return copyStyleFile();
-    // })
-    // .then(copyResponse => {
-    //     console.log(copyResponse)
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    // })
+completeTeam(mock)
