@@ -46,9 +46,7 @@ function promptMember(team) {
         team.members = []
     }
 
-    return new Promise((resolve, reject) => {
-        resolve( 
-        inquirer
+    inquirer
         .prompt([
             {
                 type: 'list',
@@ -60,17 +58,17 @@ function promptMember(team) {
         .then(member => {
 
             if (member.memberType === 'Engineer') {
-               genEngineer(team)
+               return genEngineer(team)
             } else if (member.memberType === 'Intern') {
-               genIntern(team)
+               return genIntern(team)
             } else {
                 return team
             }
         })
-        )
         
-})
+        
 }
+
 
 function genEngineer(team) {
     if (!team.members.engineers) {
@@ -178,13 +176,17 @@ function genIntern(team) {
 }
 
 init()
-    .then(promptMember
-    )
-    .then(completed => {
-        return new Promise((resolve, reject) => {
-        resolve(console.log('completed:', completed))
-        })
+    .then((firstPrompt) => {
+        console.log('firstPrompt:', firstPrompt)
+        promptMember(firstPrompt)
+        
     })
+    // .then((completed) => {
+    //     console.log('completed:', completed)
+    //     return new Promise((resolve, reject) => {
+    //     resolve(console.log('completed:', completed))
+    //     })
+    // })
 
 
     // .then(completedTeam => {
