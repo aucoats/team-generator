@@ -15,7 +15,7 @@ function init() {
 
     `)   
 
-    return inquirer
+    inquirer
         .prompt([{
             type: 'text',
             name: 'name',
@@ -37,7 +37,7 @@ function init() {
             message: "Manager's office number: "
         }])
         .then(data => {
-            return data
+            promptMember(data)
         })
 }
 
@@ -58,11 +58,11 @@ function promptMember(team) {
         .then(member => {
 
             if (member.memberType === 'Engineer') {
-               return genEngineer(team)
+               genEngineer(team)
             } else if (member.memberType === 'Intern') {
-               return genIntern(team)
+               genIntern(team)
             } else {
-                return team
+                completeTeam(team)
             }
         })
         
@@ -175,12 +175,40 @@ function genIntern(team) {
         })
 }
 
+function completeTeam(team) {
+    
+    function createManager(team) {
+        const {name, id, email, officeNumber, members} = team;
+        console.log('name:', name)
+        console.log('id:', id)
+        console.log('email:', email)
+        console.log('officeNumber:', officeNumber)
+        console.log('members:', members)
+        const managerObject = new Manager(name, id, email, officeNumber, members)
+        return managerObject
+    }
+        const {}
+
+    function createEngineer(team) {
+        const {name, id, email, officeNumber, github} = team.members.engineers;
+        console.log('name:', name)
+        console.log('id:', id)
+        console.log('email:', email)
+        console.log('officeNumber:', officeNumber)
+        console.log('github:', github)
+        const engineerObject = new Engineer(name, id, email, officeNumber, github)
+        return engineerObject
+    } 
+}
+
 init()
-    .then((firstPrompt) => {
-        console.log('firstPrompt:', firstPrompt)
-        promptMember(firstPrompt)
+
+// init()
+//     .then((firstPrompt) => {
+//         console.log('firstPrompt:', firstPrompt)
+//         promptMember(firstPrompt)
         
-    })
+    // })
     // .then((completed) => {
     //     console.log('completed:', completed)
     //     return new Promise((resolve, reject) => {
