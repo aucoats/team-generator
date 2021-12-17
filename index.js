@@ -4,6 +4,7 @@ const inquirer = require('inquirer')
 const Manager = require('./lib/Manager.js')
 const Engineer = require('./lib/Engineer.js')
 const Intern = require('./lib/Intern.js')
+const { rejects } = require('assert')
 
 const mock = {
     name: "manager",
@@ -22,7 +23,19 @@ const mock = {
             id: "engi2id",
             email: "engi2email",
             github: "engi2github"
-             }]
+             }],
+        interns: [{
+            name: "intern1", 
+            id: "intern1id",
+            email: "intern1email",
+            school: "intern1sch"
+        },
+        {
+            name: "intern2",
+            id: "intern2id",
+            email: "intern2email",
+            school: "intern2sch"
+        }]
     }
 }
 
@@ -202,17 +215,10 @@ function genIntern(team) {
 
 // creates js objects with classes
 function completeTeam(team) {
-    
-    console.log('team:', team)
-    console.log('team.members:', team.members)
-    console.log('team.members.engineers:', team.members.engineers)
-    console.log('team.members.interns:', team.members.interns)
 
     // creates manager object
     const manager = new Manager(team.name, team.id, team.email, team.officeNumber);
     
-    console.log('manager:', manager)
-
     // arrays to hold engineer and intern classes 
     const engiArray = []
     const internArray = []
@@ -236,15 +242,30 @@ function completeTeam(team) {
 
     }}   
 
-    console.log('engiArray:', engiArray)
-    console.log('internArray:', internArray)    
+    // console.log('engiArray:', engiArray)
+    // console.log('internArray:', internArray)    
 
-    // generateHTML(manager, engiArray, internArray).then( file writing functions)
+    const html = generateHTML(manager, engiArray, internArray)
+
+    if (html) {
+        // console.log('html:', html)
+        fs.writeFileSync('index.html', html, err => {
+            if (err) {
+                reject(err)
+                return
+            }
+
+            resolve({
+                ok: true, 
+                message: 'Team profile generated!'
+            })
+        })
+    }
 }
 
 function generateHTML(manager, engineers, interns) {
     return `
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -254,18 +275,123 @@ function generateHTML(manager, engineers, interns) {
         <script src="https://kit.fontawesome.com/be05b4af6b.js" crossorigin="anonymous"></script>
         <title>Team Profile</title>
     </head>
-    <body>
-        <header>
-            <h1>My Team</h1>
+    <body class="col-12">
+        <header class="bg-success text-center mh-100 w-auto col-12 mb-5 p-5 row" style="--bs-bg-opacity: .5">
+            <h1 class="col-12">My Team</h1>
         </header>
     
-        <main>
+        <main class="d-flex flex-wrap justify-content-around">
             ${managerHTML(manager)}
             ${engiHTML(engineers)}
             ${internHTML(interns)}
         </main>
     </body>
-    </html>`
+</html>`
+}
+
+// generates HTML for manager card
+function managerHTML(manager) {
+    return `
+<div class="card col-3 bg-light p-0 shadow rounded m-2">
+    <div class="card-title bg-primary">
+        <div class="card-body fs-3">
+            ${manager.name}
+        </div>
+        <div class="card-body fs-5">
+            <i class="fas fa-mug-hot"></i>${manager.getRole()}
+        </div>
+    </div>
+    <div class="card-body bg-light"> 
+        <div class="card-body"> 
+            ID: ${manager.id}
+        </div>
+        <div class="card-body"> 
+            Email: <a href="mailto:${manager.email}">${manager.email}</a>
+        </div>
+        <div class="card-body">
+            Office Number: ${manager.officeNumber}
+        </div>
+    </div>
+</div> `
+}
+
+// generates HTML for engineer cards if engineer information is input
+function engiHTML(engineers) {
+    if (engineers.length > 0) {
+    
+        var engineerRaw = ``
+
+        engineers.forEach(engineer => {
+
+            engineerRaw += `
+            <div class="card col-3 bg-light p-0 shadow rounded m-2">
+                <div class="card-title bg-primary">
+                    <div class="card-body fs-3">
+                        ${engineer.name}
+                    </div>
+                    <div class="card-body fs-5">
+                        <i class="fas fa-glasses"></i>${engineer.getRole()}
+                    </div>
+                </div>
+                <div class="card-body bg-light"> 
+                    <div class="card-body"> 
+                        ID: ${engineer.id}
+                    </div>
+                    <div class="card-body"> 
+                        Email: <a href="mailto:${engineer.email}">${engineer.email}</a>
+                    </div>
+                    <div class="card-body">
+                        GitHub: <a href="https://github.com/${engineer.github}" target="_blank">${engineer.github}</a>
+                    </div>
+                </div>
+            </div> `
+
+        })
+
+    return engineerRaw
+
+    } else {
+        return ``
+    }
+}
+
+function internHTML(interns) {
+    if (interns.length > 0) {
+    
+        var internRaw = ``
+
+        interns.forEach(intern => {
+
+            internRaw += `
+            <div class="card col-3 bg-light p-0 shadow rounded m-2">
+                <div class="card-title bg-primary">
+                    <div class="card-body fs-3">
+                        ${intern.name}
+                    </div>
+                    <div class="card-body fs-5">
+                        <i class="fas fa-user-graduate"></i>${intern.getRole()}
+                    </div>
+                </div>
+                <div class="card-body bg-light"> 
+                    <div class="card-body"> 
+                        ID: ${intern.id}
+                    </div>
+                    <div class="card-body"> 
+                        Email: <a href="mailto:${intern.email}">${intern.email}</a>
+                    </div>
+                    <div class="card-body">
+                        School: ${intern.school}
+                    </div>
+                </div>
+            </div> `
+
+        })
+
+    return internRaw
+
+    } else {
+        return ``
+    }
 }
 
 // init()
