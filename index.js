@@ -248,8 +248,7 @@ function completeTeam(team) {
     const html = generateHTML(manager, engiArray, internArray)
 
     if (html) {
-        // console.log('html:', html)
-        fs.writeFileSync('index.html', html, err => {
+        fs.writeFileSync('./dist/index.html', html, err => {
             if (err) {
                 reject(err)
                 return
@@ -260,9 +259,11 @@ function completeTeam(team) {
                 message: 'Team profile generated!'
             })
         })
+        console.log("index.html created in dist with your team's information!")
     }
 }
 
+// combines HTML generator functions into one return
 function generateHTML(manager, engineers, interns) {
     return `
 <!DOCTYPE html>
@@ -355,6 +356,7 @@ function engiHTML(engineers) {
     }
 }
 
+// generates intern HTML cards if intern info is given
 function internHTML(interns) {
     if (interns.length > 0) {
     
@@ -394,5 +396,7 @@ function internHTML(interns) {
     }
 }
 
-// init()
-completeTeam(mock)
+init()
+
+
+// completeTeam(mock)
