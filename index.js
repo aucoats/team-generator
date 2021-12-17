@@ -6,39 +6,6 @@ const Engineer = require('./lib/Engineer.js')
 const Intern = require('./lib/Intern.js')
 const { rejects } = require('assert')
 
-const mock = {
-    name: "manager",
-    id: "managerID", 
-    email: "manageremail",
-    officeNumber: "managerOffice",
-    members: { 
-        engineers: [{
-            name: "engineer1",
-            id: "engi1id", 
-            email: "engi1email",
-            github: "engigithub1"
-            }, 
-            {
-            name: "engi2",
-            id: "engi2id",
-            email: "engi2email",
-            github: "engi2github"
-             }],
-        interns: [{
-            name: "intern1", 
-            id: "intern1id",
-            email: "intern1email",
-            school: "intern1sch"
-        },
-        {
-            name: "intern2",
-            id: "intern2id",
-            email: "intern2email",
-            school: "intern2sch"
-        }]
-    }
-}
-
 // initial prompt and calls promptMember
 function init() {
     console.log(`
@@ -213,7 +180,7 @@ function genIntern(team) {
         })
 }
 
-// creates js objects with classes
+// creates js classes with user input
 function completeTeam(team) {
 
     // creates manager object
@@ -241,12 +208,11 @@ function completeTeam(team) {
             internArray.push(intern)  
 
     }}   
-
-    // console.log('engiArray:', engiArray)
-    // console.log('internArray:', internArray)    
-
+   
+    // sets html to return from generateHTML
     const html = generateHTML(manager, engiArray, internArray)
 
+    // if html exists, writes html to /dist/index
     if (html) {
         fs.writeFileSync('./dist/index.html', html, err => {
             if (err) {
@@ -318,8 +284,11 @@ function managerHTML(manager) {
 
 // generates HTML for engineer cards if engineer information is input
 function engiHTML(engineers) {
+    // if there is information in the engineer array, populate 
+    // template literal with engineer information
     if (engineers.length > 0) {
-    
+        
+        // holds output of forEach to pass to generateHTML
         var engineerRaw = ``
 
         engineers.forEach(engineer => {
@@ -348,10 +317,12 @@ function engiHTML(engineers) {
             </div> `
 
         })
-
+    
+    // returns completed template literal string
     return engineerRaw
 
     } else {
+        // returns empty html if no engineer data
         return ``
     }
 }
@@ -398,5 +369,3 @@ function internHTML(interns) {
 
 init()
 
-
-// completeTeam(mock)
