@@ -202,7 +202,7 @@ function completeTeam(team) {
 
     if (team.members.interns) {
         for (i = 0; i < team.members.interns.length; i++) {
-            const intern = new Intern(team.members.interns[i].name, team.members.engineers[i].id, 
+            const intern = new Intern(team.members.interns[i].name, team.members.interns[i].id, 
             team.members.interns[i].email, team.members.interns[i].school)
 
             internArray.push(intern)  
