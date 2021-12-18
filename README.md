@@ -27,3 +27,9 @@ To initialize the application, invoke the following at the root of the directory
     node index.js
 
 This should invoke a series of prompts, the answers to which will be utilized in the generation of your index.html file in dist/.  
+
+Example: 
+
+![Deployed GIF](./assets/deployed.gif)
+
+[Example with audio.](https://drive.google.com/file/d/1Mqxz0m2b4Cw__VNGV3XrZnQ03HIQX4va/view)
